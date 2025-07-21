@@ -207,6 +207,70 @@ spec:
     targetPort: 5678
 ```
 
+
+---
+
+### 📌 DNS Strategy: Wildcard vs Individual Records
+
+#### ✅ Option 1: **Individual Route 53 Records per App (Recommended for Failover)**
+
+* Create explicit records like:
+
+  * `app1.example.com → ALB (Primary)`
+  * `app1.example.com → ALB (DR)`
+* Use **Failover Routing Policy** with **Health Checks** on each record.
+
+**✅ Pros:**
+
+* Supports **Route 53 Failover**
+* Full visibility and control per app
+* Works well with TLS wildcard certificate
+
+**❌ Cons:**
+
+* Manual effort to create 50+ records (can be automated via Terraform or script)
+* Slightly more complex to maintain
+
+---
+
+#### ⚠️ Option 2: **Wildcard DNS Record (`*.example.com`)**
+
+* Create a single DNS record:
+
+  * `*.example.com → Primary ALB`
+
+**✅ Pros:**
+
+* Very easy to set up — **only one DNS record**
+* TLS still works using a **wildcard ACM cert**
+* Clean and minimal DNS management
+
+**❌ Cons:**
+
+* **No support for Route 53 failover**
+* If the primary ALB or cluster fails, the wildcard DNS still resolves to a broken endpoint
+* Cannot assign Route 53 **health checks** to wildcard records
+
+---
+
+#### 🧠 Recommendation:
+
+If high availability and failover are important:
+
+> **Use individual Route 53 records** per app with failover and health checks, **even if you use a wildcard ACM certificate.**
+
+If DNS failover is not critical and simplicity is preferred:
+
+> You can use a single wildcard DNS (`*.example.com`) mapped to the primary ALB, and handle app-level failover manually or through automation.
+
+---
+
+Let me know if you'd like the README exported as a downloadable file, or if you want the Terraform/script templates added to it as well.
+
+
+
+
+
 ---
 
 ## 👨‍💻 Author
