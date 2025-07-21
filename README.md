@@ -265,18 +265,6 @@ If DNS failover is not critical and simplicity is preferred:
 
 ---
 
-Let me know if you'd like the README exported as a downloadable file, or if you want the Terraform/script templates added to it as well.
-
-
-
-
-
----
-
 ## 👨‍💻 Author
 
 DevOps Team — Contact: Mani V
-
-```
-
----
